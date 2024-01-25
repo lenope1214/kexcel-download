@@ -1,5 +1,7 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.6.21"
     id("maven-publish") // for publishing
 }
 
@@ -40,6 +42,10 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-kotlin {
-    jvmToolchain(11)
+
+// jvm version
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
