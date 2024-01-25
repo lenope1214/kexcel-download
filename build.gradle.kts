@@ -1,10 +1,12 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.6.21"
     id("maven-publish") // for publishing
 }
 
 var projectGroupId = "kr.lenope1214"
-var projectVersion = "1.1.1"
+var projectVersion = "0.1.1"
 
 group = projectGroupId
 version = projectVersion
@@ -40,6 +42,10 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-kotlin {
-    jvmToolchain(11)
+
+// jvm version
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
