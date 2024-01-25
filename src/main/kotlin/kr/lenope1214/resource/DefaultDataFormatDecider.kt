@@ -19,7 +19,7 @@ class DefaultDataFormatDecider : DataFormatDecider {
     }
 
     private fun isFloatType(type: Class<*>): Boolean {
-        val floatTypes = Arrays.asList<Class<*>?>(
+        val floatTypes = listOf<Class<*>?>(
             Float::class.java, Float::class.javaPrimitiveType,
             Double::class.java, Double::class.javaPrimitiveType
         )
@@ -27,7 +27,7 @@ class DefaultDataFormatDecider : DataFormatDecider {
     }
 
     private fun isIntegerType(type: Class<*>): Boolean {
-        val integerTypes = Arrays.asList<Class<*>?>(
+        val integerTypes = listOf<Class<*>?>(
             Byte::class.java, Byte::class.javaPrimitiveType,
             Short::class.java, Short::class.javaPrimitiveType,
             Int::class.java, Int::class.javaPrimitiveType,

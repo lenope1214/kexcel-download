@@ -1,20 +1,20 @@
 package kr.lenope1214.resource
 
-import com.lannstark.resource.collection.PreCalculatedCellStyleMap
+import kr.lenope1214.resource.collection.PreCalculatedCellStyleMap
+import org.apache.poi.ss.usermodel.CellStyle
 
 class ExcelRenderResource(
-    styleMap: PreCalculatedCellStyleMap,
+    private val styleMap: PreCalculatedCellStyleMap,
     // TODO dataFieldName -> excelHeaderName Map Abstraction
     private val excelHeaderNames: Map<String, String>,
     val dataFieldNames: List<String>
 ) {
-    private val styleMap: PreCalculatedCellStyleMap = styleMap
 
     fun getCellStyle(
         dataFieldName: String,
-        excelRenderLocation: ExcelRenderLocation?
+        excelRenderLocation: ExcelRenderLocation
     ): CellStyle {
-        return styleMap.get(ExcelCellKey.Companion.of(dataFieldName, excelRenderLocation))
+        return styleMap.get(ExcelCellKey.of(dataFieldName, excelRenderLocation))
     }
 
     fun getExcelHeaderName(dataFieldName: String): String? {

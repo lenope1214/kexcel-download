@@ -1,6 +1,6 @@
 package kr.lenope1214
 
-class ExcelException(
-    message: String?,
-    cause: Throwable?
+open class ExcelException(
+    message: String? = "",
+    cause: Throwable? = null,
 ) : RuntimeException(message, cause)

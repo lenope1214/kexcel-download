@@ -1,6 +1,13 @@
 package kr.lenope1214.style.configurer
 
-import com.lannstark.style.align.ExcelAlign
+import kr.lenope1214.style.align.ExcelAlign
+import kr.lenope1214.style.align.NoExcelAlign
+import kr.lenope1214.style.border.ExcelBorders
+import kr.lenope1214.style.border.NoExcelBorders
+import kr.lenope1214.style.color.DefaultExcelColor
+import kr.lenope1214.style.color.ExcelColor
+import kr.lenope1214.style.color.NoExcelColor
+import org.apache.poi.ss.usermodel.CellStyle
 
 class ExcelCellStyleConfigurer {
     private var excelAlign: ExcelAlign = NoExcelAlign()
@@ -26,7 +33,7 @@ class ExcelCellStyleConfigurer {
         return this
     }
 
-    fun configure(cellStyle: CellStyle?) {
+    fun configure(cellStyle: CellStyle) {
         excelAlign.apply(cellStyle)
         foregroundColor.applyForeground(cellStyle)
         excelBorders.apply(cellStyle)

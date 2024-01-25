@@ -1,6 +1,6 @@
 package kr.lenope1214
 
-import com.lannstark.style.NoExcelCellStyle
+import kr.lenope1214.style.NoExcelCellStyle
 
 @Target(AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.RUNTIME)

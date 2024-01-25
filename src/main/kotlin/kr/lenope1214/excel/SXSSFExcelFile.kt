@@ -1,15 +1,24 @@
 package kr.lenope1214.excel
 
-import com.lannstark.exception.ExcelInternalException
+import kr.lenope1214.exception.ExcelInternalException
+import kr.lenope1214.resource.DataFormatDecider
+import kr.lenope1214.resource.DefaultDataFormatDecider
+import kr.lenope1214.resource.ExcelRenderLocation
+import kr.lenope1214.resource.ExcelRenderResource
+import kr.lenope1214.resource.ExcelRenderResourceFactory
+import kr.lenope1214.utils.getField
+import org.apache.poi.ss.SpreadsheetVersion
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
+import java.io.IOException
 import java.io.OutputStream
 import java.lang.reflect.Field
 
-abstract class SXSSFExcelFile<T> @JvmOverloads constructor(
-    data: List<T>?,
-    type: Class<T>?,
-    dataFormatDecider: DataFormatDecider? = DefaultDataFormatDecider()
+abstract class SXSSFExcelFile<T>  constructor(
+    data: List<T>,
+    type: Class<T>,
+    dataFormatDecider: DataFormatDecider = DefaultDataFormatDecider()
 ) : ExcelFile<T> {
     protected var wb: SXSSFWorkbook
     protected var sheet: Sheet? = null
@@ -19,7 +28,7 @@ abstract class SXSSFExcelFile<T> @JvmOverloads constructor(
      * SXSSFExcelFile
      * @param type Class type to be rendered
      */
-    constructor(type: Class<T>?) : this(emptyList<T>(), type, DefaultDataFormatDecider())
+    constructor(type: Class<T>) : this(emptyList<T>(), type, DefaultDataFormatDecider())
 
     /**
      * SXSSFExcelFile
@@ -39,9 +48,9 @@ abstract class SXSSFExcelFile<T> @JvmOverloads constructor(
         renderExcel(data)
     }
 
-    protected fun validateData(data: List<T>?) {}
+     protected open fun validateData(data: List<T>) {}
 
-    protected abstract fun renderExcel(data: List<T>?)
+    protected abstract fun renderExcel(data: List<T>)
 
     protected fun renderHeadersWithNewSheet(
         sheet: Sheet,
@@ -50,24 +59,24 @@ abstract class SXSSFExcelFile<T> @JvmOverloads constructor(
     ) {
         val row = sheet.createRow(rowIndex)
         var columnIndex = columnStartIndex
-        for (dataFieldName in resource.getDataFieldNames()) {
+        for (dataFieldName in resource.dataFieldNames) {
             val cell = row.createCell(columnIndex++)
             cell.cellStyle = resource.getCellStyle(dataFieldName, ExcelRenderLocation.HEADER)
             cell.setCellValue(resource.getExcelHeaderName(dataFieldName))
         }
     }
 
-    protected fun renderBody(
-        data: Any,
+    protected fun <T: Any> renderBody(
+        data: T ,
         rowIndex: Int,
         columnStartIndex: Int
     ) {
         val row = sheet!!.createRow(rowIndex)
         var columnIndex = columnStartIndex
-        for (dataFieldName in resource.getDataFieldNames()) {
+        for (dataFieldName in resource.dataFieldNames) {
             val cell = row.createCell(columnIndex++)
             try {
-                val field: Field = getField(data.javaClass, (dataFieldName))
+                val field: Field = getField(data::class.java, (dataFieldName))
                 field.isAccessible = true
                 cell.cellStyle = resource.getCellStyle(dataFieldName, ExcelRenderLocation.BODY)
                 val cellValue = field[data]
@@ -98,6 +107,7 @@ abstract class SXSSFExcelFile<T> @JvmOverloads constructor(
     }
 
     companion object {
+        @JvmStatic
         protected val supplyExcelVersion: SpreadsheetVersion = SpreadsheetVersion.EXCEL2007
     }
 }

@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.VerticalAlignment
 /**
  * DefaultExcelAlign
  *
- * Can be used with [com.lannstark.style.CustomExcelCellStyle]
+ * Can be used with [kr.lenope1214.style.CustomExcelCellStyle]
  * see [VerticalAlignment] and
  * [HorizontalAlignment] for detail explanation
  */

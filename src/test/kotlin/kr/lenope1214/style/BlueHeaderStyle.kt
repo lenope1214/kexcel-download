@@ -6,8 +6,8 @@ import kr.lenope1214.style.border.ExcelBorderStyle
 import kr.lenope1214.style.configurer.ExcelCellStyleConfigurer
 
 class BlueHeaderStyle : CustomExcelCellStyle() {
-    override fun configure(configurer: ExcelCellStyleConfigurer?) {
-        configurer!!.foregroundColor(223, 235, 246)
+    override fun configure(configurer: ExcelCellStyleConfigurer) {
+        configurer.foregroundColor(223, 235, 246)
             .excelBorders(DefaultExcelBorders.newInstance(ExcelBorderStyle.THIN))
             .excelAlign(DefaultExcelAlign.CENTER_CENTER)
     }

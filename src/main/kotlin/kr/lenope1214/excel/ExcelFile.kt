@@ -7,5 +7,5 @@ interface ExcelFile<T> {
     @Throws(IOException::class)
     fun write(stream: OutputStream)
 
-    fun addRows(data: List<T>?)
+    fun addRows(data: List<T>)
 }

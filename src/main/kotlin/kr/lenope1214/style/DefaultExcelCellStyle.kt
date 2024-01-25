@@ -1,14 +1,24 @@
 package kr.lenope1214.style
 
-import com.lannstark.style.align.DefaultExcelAlign
+import kr.lenope1214.style.align.DefaultExcelAlign
+import kr.lenope1214.style.align.ExcelAlign
+import kr.lenope1214.style.border.DefaultExcelBorders
+import kr.lenope1214.style.border.ExcelBorderStyle
+import kr.lenope1214.style.color.DefaultExcelColor
+import kr.lenope1214.style.color.ExcelColor
+import org.apache.poi.ss.usermodel.CellStyle
 
 /**
  * Example of using ExcelCellStyle as Enum
  */
 enum class DefaultExcelCellStyle(
-    backgroundColor: ExcelColor,
-    borders: DefaultExcelBorders,
-    align: ExcelAlign
+    private val backgroundColor: ExcelColor,
+    /**
+     * like CSS margin or padding rule,
+     * List<DefaultExcelBorder> represents rgb TOP RIGHT BOTTOM LEFT
+    </DefaultExcelBorder> */
+    private val borders: DefaultExcelBorders,
+    private val align: ExcelAlign
 ) : ExcelCellStyle {
     GREY_HEADER(
         DefaultExcelColor.rgb(217, 217, 217),
@@ -23,16 +33,7 @@ enum class DefaultExcelCellStyle(
         DefaultExcelBorders.newInstance(ExcelBorderStyle.THIN), DefaultExcelAlign.RIGHT_CENTER
     );
 
-    private val backgroundColor: ExcelColor = backgroundColor
-
-    /**
-     * like CSS margin or padding rule,
-     * List<DefaultExcelBorder> represents rgb TOP RIGHT BOTTOM LEFT
-    </DefaultExcelBorder> */
-    private val borders: DefaultExcelBorders = borders
-    private val align: ExcelAlign = align
-
-    override fun apply(cellStyle: CellStyle?) {
+    override fun apply(cellStyle: CellStyle) {
         backgroundColor.applyForeground(cellStyle)
         borders.apply(cellStyle)
         align.apply(cellStyle)

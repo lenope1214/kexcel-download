@@ -1,6 +1,11 @@
 package kr.lenope1214.style.color
 
-import com.lannstark.exception.UnSupportedExcelTypeException
+import kr.lenope1214.exception.UnSupportedExcelTypeException
+import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.usermodel.FillPatternType
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap
+import org.apache.poi.xssf.usermodel.XSSFCellStyle
+import org.apache.poi.xssf.usermodel.XSSFColor
 
 class DefaultExcelColor private constructor(
     private val red: Byte,

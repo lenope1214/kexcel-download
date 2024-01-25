@@ -1,6 +1,11 @@
 package kr.lenope1214.resource.collection
 
-import com.lannstark.resource.DataFormatDecider
+import kr.lenope1214.resource.DataFormatDecider
+import kr.lenope1214.resource.ExcelCellKey
+import kr.lenope1214.style.ExcelCellStyle
+import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.usermodel.DataFormat
+import org.apache.poi.ss.usermodel.Workbook
 
 /**
  * PreCalculatedCellStyleMap
@@ -9,26 +14,27 @@ import com.lannstark.resource.DataFormatDecider
  * In currently, PreCalculatedCellStyleMap determines {org.apache.poi.ss.usermodel.DataFormat}
  *
  */
-class PreCalculatedCellStyleMap(dataFormatDecider: DataFormatDecider) {
-    private val dataFormatDecider: DataFormatDecider = dataFormatDecider
+class PreCalculatedCellStyleMap(
+    private val dataFormatDecider: DataFormatDecider,
+) {
 
     private val cellStyleMap: MutableMap<ExcelCellKey, CellStyle> = HashMap<ExcelCellKey, CellStyle>()
 
     fun put(
-        fieldType: Class<*>?,
+        fieldType: Class<*>,
         excelCellKey: ExcelCellKey,
         excelCellStyle: ExcelCellStyle,
         wb: Workbook
     ) {
         val cellStyle: CellStyle = wb.createCellStyle()
         val dataFormat: DataFormat = wb.createDataFormat()
-        cellStyle.setDataFormat(dataFormatDecider.getDataFormat(dataFormat, fieldType))
+        cellStyle.dataFormat = dataFormatDecider.getDataFormat(dataFormat, fieldType)
         excelCellStyle.apply(cellStyle)
         cellStyleMap[excelCellKey] = cellStyle
     }
 
-    fun get(excelCellKey: ExcelCellKey): CellStyle? {
-        return cellStyleMap[excelCellKey]
+    fun get(excelCellKey: ExcelCellKey): CellStyle {
+        return cellStyleMap[excelCellKey] ?: throw IllegalStateException("CellStyle is not found")
     }
 
     val isEmpty: Boolean

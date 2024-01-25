@@ -4,12 +4,12 @@ import java.util.Objects
 
 class ExcelCellKey private constructor(
     private val dataFieldName: String,
-    private val excelRenderLocation: ExcelRenderLocation?
+    private val excelRenderLocation: ExcelRenderLocation
 ) {
-    override fun equals(o: Any?): Boolean {
-        if (this === o) return true
-        if (o == null || javaClass != o.javaClass) return false
-        val that = o as ExcelCellKey
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val that = other as ExcelCellKey
         return dataFieldName == that.dataFieldName &&
                 excelRenderLocation == that.excelRenderLocation
     }
@@ -21,9 +21,8 @@ class ExcelCellKey private constructor(
     companion object {
         fun of(
             fieldName: String,
-            excelRenderLocation: ExcelRenderLocation?
+            excelRenderLocation: ExcelRenderLocation
         ): ExcelCellKey {
-            assert(excelRenderLocation != null)
             return ExcelCellKey(fieldName, excelRenderLocation)
         }
     }

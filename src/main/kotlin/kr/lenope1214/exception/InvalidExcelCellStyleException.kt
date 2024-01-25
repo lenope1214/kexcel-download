@@ -1,8 +1,8 @@
 package kr.lenope1214.exception
 
-import com.lannstark.ExcelException
+import kr.lenope1214.ExcelException
 
 class InvalidExcelCellStyleException(
-    message: String?,
-    cause: Throwable?
+    message: String? = "",
+    cause: Throwable? = null,
 ) : ExcelException(message, cause)

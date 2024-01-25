@@ -1,6 +1,7 @@
 package kr.lenope1214.style
 
-import com.lannstark.style.configurer.ExcelCellStyleConfigurer
+import kr.lenope1214.style.configurer.ExcelCellStyleConfigurer
+import org.apache.poi.ss.usermodel.CellStyle
 
 abstract class CustomExcelCellStyle : ExcelCellStyle {
     private val configurer: ExcelCellStyleConfigurer = ExcelCellStyleConfigurer()
@@ -9,9 +10,9 @@ abstract class CustomExcelCellStyle : ExcelCellStyle {
         configure(configurer)
     }
 
-    abstract fun configure(configurer: ExcelCellStyleConfigurer?)
+    abstract fun configure(configurer: ExcelCellStyleConfigurer)
 
-    override fun apply(cellStyle: CellStyle?) {
+    override fun apply(cellStyle: CellStyle) {
         configurer.configure(cellStyle)
     }
 }

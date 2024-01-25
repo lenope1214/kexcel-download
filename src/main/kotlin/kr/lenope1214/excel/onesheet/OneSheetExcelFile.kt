@@ -1,6 +1,7 @@
 package kr.lenope1214.excel.onesheet
 
-import com.lannstark.excel.SXSSFExcelFile
+import kr.lenope1214.excel.SXSSFExcelFile
+import kr.lenope1214.resource.DataFormatDecider
 
 /**
  * OneSheetExcelFile
@@ -10,31 +11,31 @@ import com.lannstark.excel.SXSSFExcelFile
  * - support different DataFormat by Class Type
  * - support Custom CellStyle according to (header or body) and data field
  */
-class OneSheetExcelFile<T> : SXSSFExcelFile<T> {
+class OneSheetExcelFile<T: Any> : SXSSFExcelFile<T> {
     private var currentRowIndex = ROW_START_INDEX
 
-    constructor(type: Class<T>?) : super(type)
+    constructor(type: Class<T>) : super(type)
 
     constructor(
-        data: List<T>?,
-        type: Class<T>?
+        data: List<T>,
+        type: Class<T>
     ) : super(data, type)
 
     constructor(
-        data: List<T>?,
-        type: Class<T>?,
-        dataFormatDecider: DataFormatDecider?
+        data: List<T>,
+        type: Class<T>,
+        dataFormatDecider: DataFormatDecider
     ) : super(data, type, dataFormatDecider)
 
-    protected fun validateData(data: List<T>) {
-        val maxRows: Int = supplyExcelVersion.getMaxRows()
+    override fun validateData(data: List<T>) {
+        val maxRows: Int = supplyExcelVersion.maxRows
         require(data.size <= maxRows) { String.format("This concrete ExcelFile does not support over %s rows", maxRows) }
     }
 
-    fun renderExcel(data: List<T>) {
+    override fun renderExcel(data: List<T>) {
         // 1. Create sheet and renderHeader
         sheet = wb.createSheet()
-        renderHeadersWithNewSheet(sheet, currentRowIndex++, COLUMN_START_INDEX)
+        renderHeadersWithNewSheet(sheet!!, currentRowIndex++, COLUMN_START_INDEX)
 
         if (data.isEmpty()) {
             return
@@ -46,7 +47,7 @@ class OneSheetExcelFile<T> : SXSSFExcelFile<T> {
         }
     }
 
-    fun addRows(data: List<T>?) {
+    override fun addRows(data: List<T>) {
         renderBody(data, currentRowIndex++, COLUMN_START_INDEX)
     }
 

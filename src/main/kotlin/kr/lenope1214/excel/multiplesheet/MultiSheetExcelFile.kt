@@ -1,6 +1,7 @@
 package kr.lenope1214.excel.multiplesheet
 
-import com.lannstark.excel.SXSSFExcelFile
+import kr.lenope1214.excel.SXSSFExcelFile
+import kr.lenope1214.resource.DataFormatDecider
 import org.apache.commons.compress.archivers.zip.Zip64Mode
 
 /**
@@ -11,10 +12,10 @@ import org.apache.commons.compress.archivers.zip.Zip64Mode
  * - support Dffierent DataFormat by Class Type
  * - support Custom CellStyle according to (header or body) and data field
  */
-class MultiSheetExcelFile<T> : SXSSFExcelFile<T> {
+class MultiSheetExcelFile<T : Any> : SXSSFExcelFile<T> {
     private var currentRowIndex = ROW_START_INDEX
 
-    constructor(type: Class<T>?) : super(type) {
+    constructor(type: Class<T>) : super(type) {
         wb.setZip64Mode(Zip64Mode.Always)
     }
 
@@ -23,21 +24,21 @@ class MultiSheetExcelFile<T> : SXSSFExcelFile<T> {
 	 * see http://apache-poi.1045710.n5.nabble.com/Bug-62872-New-Writing-large-files-with-800k-rows-gives-java-io-IOException-This-archive-contains-unc-td5732006.html
 	 */
     constructor(
-        data: List<T>?,
-        type: Class<T>?
+        data: List<T>,
+        type: Class<T>
     ) : super(data, type) {
         wb.setZip64Mode(Zip64Mode.Always)
     }
 
     constructor(
-        data: List<T>?,
-        type: Class<T>?,
-        dataFormatDecider: DataFormatDecider?
+        data: List<T>,
+        type: Class<T>,
+        dataFormatDecider: DataFormatDecider
     ) : super(data, type, dataFormatDecider) {
         wb.setZip64Mode(Zip64Mode.Always)
     }
 
-    protected fun renderExcel(data: List<T>) {
+    override fun renderExcel(data: List<T>) {
         // 1. Create header and return if data is empty
         if (data.isEmpty()) {
             createNewSheetWithHeader()
@@ -49,7 +50,7 @@ class MultiSheetExcelFile<T> : SXSSFExcelFile<T> {
         addRows(data)
     }
 
-    fun addRows(data: List<T>) {
+   override fun addRows(data: List<T>) {
         for (renderedData in data) {
             renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX)
             if (currentRowIndex == maxRowCanBeRendered) {
@@ -61,13 +62,14 @@ class MultiSheetExcelFile<T> : SXSSFExcelFile<T> {
 
     private fun createNewSheetWithHeader() {
         sheet = wb.createSheet()
-        renderHeadersWithNewSheet(sheet, ROW_START_INDEX, COLUMN_START_INDEX)
+        renderHeadersWithNewSheet(sheet!!, ROW_START_INDEX, COLUMN_START_INDEX)
         currentRowIndex++
     }
 
     companion object {
-        private val maxRowCanBeRendered: Int = supplyExcelVersion.getMaxRows() - 1
+        private val maxRowCanBeRendered: Int = supplyExcelVersion.maxRows - 1
         private const val ROW_START_INDEX = 0
         private const val COLUMN_START_INDEX = 0
     }
+
 }
