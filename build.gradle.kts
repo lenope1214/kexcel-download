@@ -49,3 +49,7 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "11"
     }
 }
+
+kotlin {
+    jvmToolchain(11)
+}
