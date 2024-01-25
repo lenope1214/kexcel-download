@@ -6,7 +6,7 @@ plugins {
 }
 
 var projectGroupId = "kr.lenope1214"
-var projectVersion = "0.1.2"
+var projectVersion = "0.1.3"
 
 group = projectGroupId
 version = projectVersion
