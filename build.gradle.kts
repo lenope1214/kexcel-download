@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
+    id("maven-publish") // for publishing
 }
 
 group = "kr.lenope1214"
