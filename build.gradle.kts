@@ -3,12 +3,27 @@ plugins {
     id("maven-publish") // for publishing
 }
 
-group = "kr.lenope1214"
-version = "1.0-SNAPSHOT"
+var projectGroupId = "kr.lenope1214"
+var projectVersion = "1.1.1"
 
+group = projectGroupId
+version = projectVersion
 repositories {
     mavenCentral()
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = projectGroupId
+            artifactId = "kexcel-download"
+            version = projectVersion
+
+            from(components["kotlin"])
+        }
+    }
+}
+
 
 dependencies {
     val poiVersion = "5.2.5"
@@ -26,5 +41,5 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(11)
 }
