@@ -15,10 +15,11 @@ import java.io.IOException
 import java.io.OutputStream
 import java.lang.reflect.Field
 
-abstract class SXSSFExcelFile<T>  constructor(
+abstract class SXSSFExcelFile<T> constructor(
     data: List<T>,
     type: Class<T>,
-    dataFormatDecider: DataFormatDecider = DefaultDataFormatDecider()
+    dataFormatDecider: DataFormatDecider = DefaultDataFormatDecider(),
+    val headerNameMap: Map<String, String> = emptyMap(),
 ) : ExcelFile<T> {
     protected var wb: SXSSFWorkbook
     protected var sheet: Sheet? = null
@@ -48,28 +49,29 @@ abstract class SXSSFExcelFile<T>  constructor(
         renderExcel(data)
     }
 
-     protected open fun validateData(data: List<T>) {}
+    protected open fun validateData(data: List<T>) {}
 
     protected abstract fun renderExcel(data: List<T>)
 
     protected fun renderHeadersWithNewSheet(
         sheet: Sheet,
         rowIndex: Int,
-        columnStartIndex: Int
+        columnStartIndex: Int,
     ) {
         val row = sheet.createRow(rowIndex)
         var columnIndex = columnStartIndex
         for (dataFieldName in resource.dataFieldNames) {
             val cell = row.createCell(columnIndex++)
             cell.cellStyle = resource.getCellStyle(dataFieldName, ExcelRenderLocation.HEADER)
-            cell.setCellValue(resource.getExcelHeaderName(dataFieldName))
+            val cellValue = resource.getExcelHeaderName(dataFieldName)
+            cell.setCellValue(headerNameMap[cellValue] ?: cellValue)
         }
     }
 
-    protected fun <T: Any> renderBody(
-        data: T ,
+    protected fun <T : Any> renderBody(
+        data: T,
         rowIndex: Int,
-        columnStartIndex: Int
+        columnStartIndex: Int,
     ) {
         val row = sheet!!.createRow(rowIndex)
         var columnIndex = columnStartIndex
@@ -89,7 +91,7 @@ abstract class SXSSFExcelFile<T>  constructor(
 
     private fun renderCellValue(
         cell: Cell,
-        cellValue: Any?
+        cellValue: Any?,
     ) {
         if (cellValue is Number) {
             cell.setCellValue(cellValue.toDouble())
